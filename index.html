@@ -119,14 +119,16 @@
       submitButton.style.display = "flex";
     }
 
-    var formContainers = document.getElementsByClassName("newsletter-form-container");
-    for (var i = 0; i < formContainers.length; i++) {
-      var formContainer = formContainers[i];
-      if (formContainer.classList.contains('newsletter-handlers-added')) continue;
-      formContainer.querySelector(".newsletter-form").addEventListener("submit", submitHandler);
-      formContainer.querySelector(".newsletter-back-button").addEventListener("click", resetFormHandler);
-      formContainer.classList.add("newsletter-handlers-added");
-    }
+    document.addEventListener('DOMContentLoaded', function() {
+      var formContainers = document.getElementsByClassName("newsletter-form-container");
+      for (var i = 0; i < formContainers.length; i++) {
+        var formContainer = formContainers[i];
+        if (formContainer.classList.contains('newsletter-handlers-added')) continue;
+        formContainer.querySelector(".newsletter-form").addEventListener("submit", submitHandler);
+        formContainer.querySelector(".newsletter-back-button").addEventListener("click", resetFormHandler);
+        formContainer.classList.add("newsletter-handlers-added");
+      }
+    });
 
     function toggleMobileNav() {
       document.getElementById('mobile-nav').classList.toggle('open');

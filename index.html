@@ -37,33 +37,96 @@
   <div class="mobile-nav-overlay" id="mobile-nav-overlay" onclick="closeMobileNav()"></div>
 
   <script>
-    // Waitlist form
-    document.getElementById('waitlist-form').addEventListener('submit', async function(e) {
-      e.preventDefault();
-      const form = e.target;
-      const btn = form.querySelector('.waitlist-btn');
-      btn.textContent = 'Submitting…';
-      btn.disabled = true;
-      try {
-        const res = await fetch(form.action, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email: form.email.value })
-        });
-        if (res.ok) {
-          form.querySelector('.waitlist-row').style.display = 'none';
-          document.getElementById('waitlist-success').style.display = 'block';
-        } else {
-          btn.textContent = 'Notify Me';
-          btn.disabled = false;
-          alert('Something went wrong — please try again.');
-        }
-      } catch {
-        btn.textContent = 'Notify Me';
-        btn.disabled = false;
-        alert('Something went wrong — please try again.');
+    // Loops waitlist form
+    function submitHandler(event) {
+      event.preventDefault();
+      var container = event.target.parentNode;
+      var form = container.querySelector(".newsletter-form");
+      var formInput = container.querySelector(".newsletter-form-input");
+      var success = container.querySelector(".newsletter-success");
+      var errorContainer = container.querySelector(".newsletter-error");
+      var errorMessage = container.querySelector(".newsletter-error-message");
+      var backButton = container.querySelector(".newsletter-back-button");
+      var submitButton = container.querySelector(".newsletter-form-button");
+      var loadingButton = container.querySelector(".newsletter-loading-button");
+
+      const rateLimit = () => {
+        errorContainer.style.display = "flex";
+        errorMessage.innerText = "Too many signups, please try again in a little while";
+        submitButton.style.display = "none";
+        formInput.style.display = "none";
+        backButton.style.display = "block";
+      };
+
+      var time = new Date();
+      var timestamp = time.valueOf();
+      var previousTimestamp = localStorage.getItem("loops-form-timestamp");
+      if (previousTimestamp && Number(previousTimestamp) + 60000 > timestamp) {
+        rateLimit();
+        return;
       }
-    });
+      localStorage.setItem("loops-form-timestamp", timestamp);
+
+      submitButton.style.display = "none";
+      loadingButton.style.display = "flex";
+
+      var formBody = "userGroup=&mailingLists=&email=" + encodeURIComponent(formInput.value);
+
+      fetch(event.target.action, {
+        method: "POST",
+        body: formBody,
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      })
+        .then((res) => [res.ok, res.json(), res])
+        .then(([ok, dataPromise, res]) => {
+          if (ok) {
+            success.style.display = "flex";
+            form.reset();
+          } else {
+            dataPromise.then(data => {
+              errorContainer.style.display = "flex";
+              errorMessage.innerText = data.message ? data.message : res.statusText;
+            });
+          }
+        })
+        .catch(error => {
+          if (error.message === "Failed to fetch") { rateLimit(); return; }
+          errorContainer.style.display = "flex";
+          if (error.message) errorMessage.innerText = error.message;
+          localStorage.setItem("loops-form-timestamp", '');
+        })
+        .finally(() => {
+          formInput.style.display = "none";
+          loadingButton.style.display = "none";
+          backButton.style.display = "block";
+        });
+    }
+
+    function resetFormHandler(event) {
+      var container = event.target.parentNode;
+      var formInput = container.querySelector(".newsletter-form-input");
+      var success = container.querySelector(".newsletter-success");
+      var errorContainer = container.querySelector(".newsletter-error");
+      var errorMessage = container.querySelector(".newsletter-error-message");
+      var backButton = container.querySelector(".newsletter-back-button");
+      var submitButton = container.querySelector(".newsletter-form-button");
+
+      success.style.display = "none";
+      errorContainer.style.display = "none";
+      errorMessage.innerText = "Oops! Something went wrong, please try again";
+      backButton.style.display = "none";
+      formInput.style.display = "flex";
+      submitButton.style.display = "flex";
+    }
+
+    var formContainers = document.getElementsByClassName("newsletter-form-container");
+    for (var i = 0; i < formContainers.length; i++) {
+      var formContainer = formContainers[i];
+      if (formContainer.classList.contains('newsletter-handlers-added')) continue;
+      formContainer.querySelector(".newsletter-form").addEventListener("submit", submitHandler);
+      formContainer.querySelector(".newsletter-back-button").addEventListener("click", resetFormHandler);
+      formContainer.classList.add("newsletter-handlers-added");
+    }
 
     function toggleMobileNav() {
       document.getElementById('mobile-nav').classList.toggle('open');
@@ -251,20 +314,22 @@
       <h2 class="section-title">Coming soon to iOS &amp; Android</h2>
       <p class="app-store-sub">Pactd is currently in development. Sign up below to be first in line when we launch.</p>
 
-      <form class="waitlist-form" id="waitlist-form" action="https://app.loops.so/api/newsletter-form/cmp4nzyq004pb0j023zyu5n3e" method="POST">
-        <div class="waitlist-row">
-          <input
-            class="waitlist-input"
-            type="email"
-            name="email"
-            placeholder="your@email.com"
-            required
-            autocomplete="email"
-          />
-          <button class="btn btn-primary waitlist-btn" type="submit">Notify Me</button>
+      <div class="newsletter-form-container">
+        <form class="newsletter-form waitlist-form" action="https://app.loops.so/api/newsletter-form/cmp4nzyq004pb0j023zyu5n3e" method="POST">
+          <div class="waitlist-row">
+            <input class="newsletter-form-input waitlist-input" placeholder="your@email.com" required type="email" name="newsletter-form-input" autocomplete="email" />
+            <button type="submit" class="newsletter-form-button btn btn-primary waitlist-btn">Join Waitlist</button>
+            <button type="button" class="newsletter-loading-button btn btn-primary waitlist-btn" style="display:none;">Please wait…</button>
+          </div>
+        </form>
+        <div class="newsletter-success waitlist-feedback" style="display:none;">
+          <p class="newsletter-success-message">You're on the list! We'll be in touch when we launch.</p>
         </div>
-        <p class="waitlist-success" id="waitlist-success">You're on the list! We'll be in touch when we launch.</p>
-      </form>
+        <div class="newsletter-error waitlist-feedback" style="display:none;">
+          <p class="newsletter-error-message">Oops! Something went wrong, please try again.</p>
+        </div>
+        <button class="newsletter-back-button waitlist-back" type="button" style="display:none;">&larr; Back</button>
+      </div>
     </div>
   </section>
 

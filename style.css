@@ -566,12 +566,33 @@ body {
 
 .waitlist-btn { white-space: nowrap; }
 
-.waitlist-success {
-  display: none;
+.waitlist-feedback {
+  justify-content: center;
+}
+
+.newsletter-success-message {
   color: var(--green);
   font-size: 0.95rem;
   font-weight: 600;
 }
+
+.newsletter-error-message {
+  color: #EF4444;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.waitlist-back {
+  color: var(--text-muted);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font);
+  font-size: 0.875rem;
+  margin-top: 4px;
+}
+
+.waitlist-back:hover { color: var(--text); text-decoration: underline; }
 
 @media (max-width: 600px) {
   .waitlist-row { flex-direction: column; }

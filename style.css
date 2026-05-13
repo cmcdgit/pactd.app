@@ -462,6 +462,73 @@ body {
   line-height: 1.6;
 }
 
+/* ─── Venues pitch ──────────────────────────────────────────────── */
+.venues-pitch {
+  padding: 100px 0;
+  background: linear-gradient(180deg, var(--bg) 0%, var(--surface) 50%, var(--bg) 100%);
+}
+
+.venues-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+}
+
+.venues-sub {
+  color: var(--text-muted);
+  font-size: 1.05rem;
+  line-height: 1.8;
+  margin-bottom: 32px;
+}
+
+.venues-benefits {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.venues-benefit {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.venues-benefit-icon {
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  border-radius: 10px;
+  background: rgba(224, 64, 251, 0.1);
+  border: 1px solid rgba(224, 64, 251, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary);
+}
+
+.venues-benefit-icon svg { width: 20px; height: 20px; }
+
+.venues-benefit h3 {
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin-bottom: 4px;
+  color: var(--text);
+}
+
+.venues-benefit p {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+@media (max-width: 900px) {
+  .venues-grid {
+    grid-template-columns: 1fr;
+    gap: 48px;
+  }
+}
+
 /* ─── App Store ─────────────────────────────────────────────────── */
 .app-store {
   padding: 100px 0;

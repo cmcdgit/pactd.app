@@ -1,0 +1,1374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pactd — Make It Happen</title>
+  <meta name="description" content="Pactd is the commitment-based live music platform where ticket purchases make events happen. Discover, create, and attend live gigs powered by The Pact." />
+
+  <style>
+    :root {
+      --bg:        #0A0A0F;
+      --surface:   #13131A;
+      --border:    #1E1E2E;
+      --accent:    #7C3AED;
+      --accent2:   #A855F7;
+      --text:      #E2E8F0;
+      --muted:     #94A3B8;
+      --success:   #10B981;
+      --warning:   #F59E0B;
+      --danger:    #EF4444;
+      --radius:    12px;
+      --sidebar-w: 260px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    /* ── Sidebar ── */
+    .sidebar {
+      position: fixed;
+      top: 0; left: 0; bottom: 0;
+      width: var(--sidebar-w);
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      overflow-y: auto;
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+      padding: 0 0 2rem;
+    }
+
+    .sidebar-logo {
+      padding: 1.5rem 1.25rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+    }
+
+    .logo-mark {
+      width: 36px; height: 36px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: .9rem; color: #fff;
+      flex-shrink: 0;
+    }
+
+    .logo-text { font-weight: 700; font-size: 1.1rem; letter-spacing: -.5px; }
+    .logo-sub  { font-size: .7rem; color: var(--muted); margin-top: 1px; }
+
+    .sidebar nav { padding: 1rem .75rem; flex: 1; }
+
+    .nav-section { margin-bottom: 1.5rem; }
+    .nav-label {
+      font-size: .65rem; font-weight: 700; letter-spacing: 1px;
+      text-transform: uppercase; color: var(--muted);
+      padding: .25rem .5rem; margin-bottom: .35rem;
+    }
+
+    .nav-link {
+      display: flex; align-items: center; gap: .6rem;
+      padding: .5rem .75rem;
+      border-radius: 8px;
+      color: var(--muted);
+      text-decoration: none;
+      font-size: .875rem;
+      transition: all .15s;
+      cursor: pointer;
+    }
+    .nav-link:hover, .nav-link.active {
+      background: rgba(124,58,237,.15);
+      color: var(--accent2);
+    }
+    .nav-link .icon { font-size: 1rem; width: 1.25rem; text-align: center; }
+
+    /* ── Main content ── */
+    .main {
+      margin-left: var(--sidebar-w);
+      min-height: 100vh;
+    }
+
+    /* ── Hero ── */
+    .hero {
+      background: radial-gradient(ellipse at 60% 0%, rgba(124,58,237,.3) 0%, transparent 60%),
+                  radial-gradient(ellipse at 20% 80%, rgba(168,85,247,.15) 0%, transparent 50%),
+                  var(--bg);
+      padding: 6rem 3rem 5rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%237C3AED' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+      pointer-events: none;
+    }
+
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: .5rem;
+      background: rgba(124,58,237,.2);
+      border: 1px solid rgba(124,58,237,.4);
+      border-radius: 999px;
+      padding: .3rem .9rem;
+      font-size: .75rem; font-weight: 600; color: var(--accent2);
+      margin-bottom: 1.5rem;
+      position: relative; z-index: 1;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -1.5px;
+      margin-bottom: 1.25rem;
+      position: relative; z-index: 1;
+    }
+
+    .hero h1 span {
+      background: linear-gradient(135deg, var(--accent2), #C084FC);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-sub {
+      font-size: 1.15rem; color: var(--muted);
+      max-width: 540px; margin-bottom: 2.5rem;
+      position: relative; z-index: 1;
+    }
+
+    .hero-pills {
+      display: flex; flex-wrap: wrap; gap: .6rem;
+      position: relative; z-index: 1;
+    }
+
+    .pill {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: .4rem 1rem;
+      font-size: .8rem; color: var(--muted);
+      transition: all .2s;
+    }
+    .pill:hover { border-color: var(--accent); color: var(--accent2); }
+
+    /* ── Sections ── */
+    .section { padding: 4rem 3rem; border-top: 1px solid var(--border); }
+    .section-title {
+      font-size: 1.75rem; font-weight: 700; letter-spacing: -.5px;
+      margin-bottom: .5rem;
+    }
+    .section-sub {
+      color: var(--muted); font-size: .95rem; margin-bottom: 2.5rem;
+    }
+
+    /* ── Feature cards grid ── */
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      transition: border-color .2s, transform .2s;
+      cursor: default;
+    }
+    .card:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+    }
+
+    .card-icon {
+      font-size: 1.5rem;
+      margin-bottom: .75rem;
+      width: 44px; height: 44px;
+      background: rgba(124,58,237,.15);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    .card h3 { font-size: 1rem; font-weight: 600; margin-bottom: .35rem; }
+    .card p  { font-size: .85rem; color: var(--muted); line-height: 1.5; }
+
+    /* ── Tabs ── */
+    .tabs { display: flex; gap: .5rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+
+    .tab {
+      padding: .45rem 1rem;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--muted);
+      font-size: .85rem; font-weight: 500;
+      cursor: pointer; transition: all .15s;
+    }
+    .tab.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+    .tab:hover:not(.active) { border-color: var(--accent); color: var(--accent2); }
+
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* ── Accordion ── */
+    .accordion { border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+    .accordion + .accordion { margin-top: .75rem; }
+
+    .accordion-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1rem 1.25rem;
+      background: var(--surface);
+      cursor: pointer; user-select: none;
+      font-weight: 600; font-size: .95rem;
+      transition: background .15s;
+    }
+    .accordion-header:hover { background: rgba(124,58,237,.08); }
+    .accordion-header .acc-icon { color: var(--muted); font-size: 1rem; transition: transform .25s; }
+    .accordion-header.open .acc-icon { transform: rotate(180deg); }
+
+    .accordion-body {
+      max-height: 0; overflow: hidden;
+      transition: max-height .35s ease;
+      background: var(--bg);
+    }
+    .accordion-body.open { max-height: 1200px; }
+    .accordion-body-inner { padding: 1.25rem; }
+
+    /* ── Flow diagram ── */
+    .flow {
+      display: flex; flex-wrap: wrap; align-items: center; gap: 0;
+      margin: 1.5rem 0;
+    }
+
+    .flow-step {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: .85rem 1.1rem;
+      font-size: .85rem;
+      text-align: center;
+      min-width: 130px;
+    }
+    .flow-step .step-num {
+      font-size: .65rem; font-weight: 700; color: var(--accent2);
+      text-transform: uppercase; letter-spacing: .5px;
+      margin-bottom: .2rem;
+    }
+    .flow-step .step-label { font-weight: 600; }
+    .flow-step .step-sub { color: var(--muted); font-size: .75rem; margin-top: .15rem; }
+
+    .flow-arrow {
+      padding: 0 .5rem;
+      color: var(--accent);
+      font-size: 1.2rem;
+    }
+
+    /* ── Role table ── */
+    .role-table {
+      width: 100%; border-collapse: collapse;
+      font-size: .875rem;
+    }
+    .role-table th {
+      text-align: left; padding: .75rem 1rem;
+      background: var(--surface); font-weight: 600;
+      border-bottom: 1px solid var(--border);
+      color: var(--muted); font-size: .75rem;
+      text-transform: uppercase; letter-spacing: .5px;
+    }
+    .role-table td {
+      padding: .75rem 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .role-table tr:last-child td { border-bottom: none; }
+    .role-table tr:hover td { background: rgba(124,58,237,.04); }
+
+    .badge {
+      display: inline-block;
+      padding: .2rem .55rem;
+      border-radius: 999px;
+      font-size: .7rem; font-weight: 600;
+    }
+    .badge-green  { background: rgba(16,185,129,.15); color: var(--success); }
+    .badge-purple { background: rgba(124,58,237,.15); color: var(--accent2); }
+    .badge-amber  { background: rgba(245,158,11,.15); color: var(--warning); }
+    .badge-red    { background: rgba(239,68,68,.15);  color: var(--danger); }
+
+    /* ── Tech stack ── */
+    .tech-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: .75rem;
+    }
+    .tech-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: .75rem 1rem;
+      font-size: .8rem;
+    }
+    .tech-item .tech-cat { color: var(--accent2); font-size: .65rem; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; margin-bottom: .25rem; }
+    .tech-item .tech-name { font-weight: 600; }
+
+    /* ── Stat bar ── */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 1rem; margin-bottom: 3rem;
+    }
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem;
+    }
+    .stat-card .stat-val { font-size: 2rem; font-weight: 800; color: var(--accent2); line-height: 1; }
+    .stat-card .stat-label { font-size: .8rem; color: var(--muted); margin-top: .35rem; }
+
+    /* ── Nav highlight on scroll ── */
+    .nav-link { border-left: 2px solid transparent; margin-left: -2px; border-radius: 0 8px 8px 0; padding-left: .75rem; }
+    .nav-link.active { border-left-color: var(--accent); }
+
+    /* ── Codeblock ── */
+    .code-block {
+      background: #0D0D18;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      font-family: 'SF Mono', 'Fira Mono', monospace;
+      font-size: .8rem;
+      color: #A5B4FC;
+      overflow-x: auto;
+      white-space: pre;
+      line-height: 1.6;
+    }
+    .code-block .kw { color: #C084FC; }
+    .code-block .str { color: #86EFAC; }
+    .code-block .cm { color: #475569; font-style: italic; }
+
+    /* ── Mobile ── */
+    .hamburger {
+      display: none;
+      position: fixed; top: 1rem; left: 1rem;
+      z-index: 200;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      width: 40px; height: 40px;
+      align-items: center; justify-content: center;
+      cursor: pointer; font-size: 1.1rem;
+    }
+
+    .sidebar-overlay {
+      display: none;
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,.6);
+      z-index: 99;
+    }
+
+    @media (max-width: 768px) {
+      .sidebar { transform: translateX(-100%); transition: transform .25s; }
+      .sidebar.open { transform: translateX(0); }
+      .sidebar-overlay.open { display: block; }
+      .main { margin-left: 0; }
+      .hamburger { display: flex; }
+      .hero { padding: 5rem 1.5rem 3rem; }
+      .section { padding: 3rem 1.5rem; }
+      .flow { gap: .25rem; }
+      .flow-step { min-width: 100px; font-size: .75rem; }
+    }
+
+    /* ── Pact diagram ── */
+    .pact-diagram {
+      display: flex; gap: 1.5rem; align-items: stretch; flex-wrap: wrap;
+      margin: 1.5rem 0;
+    }
+    .pact-box {
+      flex: 1; min-width: 220px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem;
+    }
+    .pact-box.highlight { border-color: var(--accent); background: rgba(124,58,237,.08); }
+    .pact-box h4 { font-size: .85rem; font-weight: 700; margin-bottom: .5rem; color: var(--accent2); }
+    .pact-box ul { list-style: none; }
+    .pact-box ul li { font-size: .82rem; color: var(--muted); padding: .2rem 0; display: flex; gap: .4rem; }
+    .pact-box ul li::before { content: '→'; color: var(--accent); }
+
+    /* ── Footer ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2rem 3rem;
+      color: var(--muted); font-size: .8rem;
+      display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem;
+    }
+
+    a { color: var(--accent2); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    ul.feature-list { list-style: none; }
+    ul.feature-list li {
+      padding: .3rem 0;
+      font-size: .875rem; color: var(--muted);
+      display: flex; gap: .5rem; align-items: flex-start;
+    }
+    ul.feature-list li::before { content: '✓'; color: var(--success); font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+  </style>
+</head>
+<body>
+
+<!-- Mobile hamburger -->
+<button class="hamburger" onclick="toggleSidebar()" aria-label="Menu">☰</button>
+<div class="sidebar-overlay" id="overlay" onclick="toggleSidebar()"></div>
+
+<!-- Sidebar -->
+<aside class="sidebar" id="sidebar">
+  <a href="/" class="sidebar-logo" style="text-decoration:none;color:inherit;">
+    <div class="logo-mark">P</div>
+    <div>
+      <div class="logo-text">Pactd</div>
+      <div class="logo-sub">Documentation</div>
+    </div>
+  </a>
+
+  <nav>
+    <div class="nav-section">
+      <a class="nav-link" href="/">
+        <span class="icon">←</span> Back to site
+      </a>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-label">Overview</div>
+      <a class="nav-link active" href="#intro" onclick="closeMobile()">
+        <span class="icon">🏠</span> Introduction
+      </a>
+      <a class="nav-link" href="#the-pact" onclick="closeMobile()">
+        <span class="icon">🤝</span> The Pact Model
+      </a>
+      <a class="nav-link" href="#roles" onclick="closeMobile()">
+        <span class="icon">👥</span> User Roles
+      </a>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-label">Features</div>
+      <a class="nav-link" href="#discovery" onclick="closeMobile()">
+        <span class="icon">🔍</span> Event Discovery
+      </a>
+      <a class="nav-link" href="#events" onclick="closeMobile()">
+        <span class="icon">🎵</span> Event Management
+      </a>
+      <a class="nav-link" href="#tickets" onclick="closeMobile()">
+        <span class="icon">🎟️</span> Tickets
+      </a>
+      <a class="nav-link" href="#venues" onclick="closeMobile()">
+        <span class="icon">📍</span> Venues
+      </a>
+      <a class="nav-link" href="#payments" onclick="closeMobile()">
+        <span class="icon">💳</span> Payments
+      </a>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-label">Flows</div>
+      <a class="nav-link" href="#onboarding" onclick="closeMobile()">
+        <span class="icon">🚀</span> Getting Started
+      </a>
+      <a class="nav-link" href="#auth" onclick="closeMobile()">
+        <span class="icon">🔐</span> Authentication
+      </a>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-label">Technical</div>
+      <a class="nav-link" href="#stack" onclick="closeMobile()">
+        <span class="icon">⚙️</span> Tech Stack
+      </a>
+      <a class="nav-link" href="#navigation" onclick="closeMobile()">
+        <span class="icon">🗺️</span> Navigation
+      </a>
+    </div>
+  </nav>
+</aside>
+
+<!-- Main content -->
+<main class="main">
+
+  <!-- Hero -->
+  <section class="hero" id="intro">
+    <div class="hero-badge">🎵 Grassroots Live Music Platform</div>
+    <h1>The app that makes<br><span>live music happen</span></h1>
+    <p class="hero-sub">
+      Pactd is a commitment-based event platform for independent music and grassroots artists.
+      Every ticket purchase is a promise — and enough promises turn a show from a dream into a reality.
+    </p>
+    <div class="hero-pills">
+      <span class="pill">iOS & Android</span>
+      <span class="pill">Stripe Payments</span>
+      <span class="pill">QR Ticket Scanning</span>
+      <span class="pill">Real-time Discovery</span>
+      <span class="pill">Ticket Transfers</span>
+      <span class="pill">Venue Management</span>
+      <span class="pill">Organiser Payouts</span>
+    </div>
+  </section>
+
+  <!-- Stats -->
+  <section class="section" id="overview" style="border-top:none; padding-top:2rem; padding-bottom:1.5rem;">
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-val">4</div>
+        <div class="stat-label">Main tabs in the app</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-val">16</div>
+        <div class="stat-label">Music genres supported</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-val">7</div>
+        <div class="stat-label">Event categories</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-val">5</div>
+        <div class="stat-label">Currencies (EUR, GBP, USD…)</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- The Pact -->
+  <section class="section" id="the-pact">
+    <div class="section-title">The Pact Model</div>
+    <p class="section-sub">Pactd's core innovation — a commitment-based ticketing model that removes financial risk from independent promoters.</p>
+
+    <div class="pact-diagram">
+      <div class="pact-box">
+        <h4>Traditional Events</h4>
+        <ul>
+          <li>Organiser pays upfront regardless of turnout</li>
+          <li>Venue booked whether or not enough tickets sell</li>
+          <li>Attendees book and sometimes don't show</li>
+          <li>Artists play to empty rooms</li>
+        </ul>
+      </div>
+
+      <div class="pact-box highlight">
+        <h4>The Pact Way</h4>
+        <ul>
+          <li>Organiser sets a minimum ticket threshold</li>
+          <li>Buyers commit — their purchase makes it real</li>
+          <li>Event proceeds only when threshold is met</li>
+          <li>Every seat filled. Every show matters.</li>
+        </ul>
+      </div>
+
+      <div class="pact-box">
+        <h4>For Everyone</h4>
+        <ul>
+          <li>Artists know they have a guaranteed audience</li>
+          <li>Venues see predictable attendance numbers</li>
+          <li>Fans know the gig is actually happening</li>
+          <li>Grassroots music thrives</li>
+        </ul>
+      </div>
+    </div>
+
+    <p style="color:var(--muted); font-size:.875rem;">
+      Each event has a <strong style="color:var(--text)">ticket threshold</strong> — the minimum number of tickets that must be sold for the gig to go ahead.
+      Until that threshold is met, the event is shown as building momentum. Once it's reached, it's confirmed. That commitment is <em>The Pact</em>.
+    </p>
+  </section>
+
+  <!-- Roles -->
+  <section class="section" id="roles">
+    <div class="section-title">User Roles</div>
+    <p class="section-sub">Pactd supports three distinct roles, each with their own set of capabilities.</p>
+
+    <div class="tabs" id="roles-tabs">
+      <button class="tab active" onclick="switchTab('roles', 'attendee', this)">🎟️ Attendee</button>
+      <button class="tab" onclick="switchTab('roles', 'organiser', this)">🎵 Organiser</button>
+      <button class="tab" onclick="switchTab('roles', 'venue-admin', this)">📍 Venue Admin</button>
+    </div>
+
+    <div id="roles-attendee" class="tab-panel active">
+      <div class="cards">
+        <div class="card">
+          <div class="card-icon">🔍</div>
+          <h3>Discover Events</h3>
+          <p>Browse and search gigs near you with real-time filters for genre, category, location, and price.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">🎟️</div>
+          <h3>Buy Tickets</h3>
+          <p>One-tap purchase for free events. Secure Stripe checkout for paid gigs with a transparent booking fee.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">📅</div>
+          <h3>Manage Tickets</h3>
+          <p>View your upcoming and past tickets, add events to your calendar, and access your QR code for entry.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">🔀</div>
+          <h3>Transfer Tickets</h3>
+          <p>Can't make it? Transfer your ticket to a friend via a shareable link. Transfers are time-limited and cancellable.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">❤️</div>
+          <h3>Save Favourites</h3>
+          <p>Favourite events and venues. Saved venue events bubble to the top of your discovery feed.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">⭐</div>
+          <h3>Review Venues</h3>
+          <p>Rate and write reviews for venues on a 5-star scale to help the community find great spaces.</p>
+        </div>
+      </div>
+    </div>
+
+    <div id="roles-organiser" class="tab-panel">
+      <div class="cards">
+        <div class="card">
+          <div class="card-icon">➕</div>
+          <h3>Create Events</h3>
+          <p>Set up gigs with full details: artist name, venue, date, time, ticket quantity, threshold, price, description, image, category, and genre.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">📋</div>
+          <h3>Manage Events</h3>
+          <p>Edit event details, monitor ticket sales, and duplicate past events for quick re-scheduling.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">📱</div>
+          <h3>QR Scanning</h3>
+          <p>Use the built-in scanner to check guests in at the door. Switch between scan mode and an attendee list view.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">📊</div>
+          <h3>Sales Analytics</h3>
+          <p>View a timeline chart of ticket sales for each event so you can track momentum and demand.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">💷</div>
+          <h3>Stripe Payouts</h3>
+          <p>Connect a Stripe account to receive payments. View your available balance, pending balance, and per-event earnings breakdown.</p>
+        </div>
+      </div>
+    </div>
+
+    <div id="roles-venue-admin" class="tab-panel">
+      <div class="cards">
+        <div class="card">
+          <div class="card-icon">🏛️</div>
+          <h3>Register a Venue</h3>
+          <p>Add your venue to Pactd with a name, address, description, image, and GPS location. Venue registration goes through an approval workflow.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">✅</div>
+          <h3>Approve Events</h3>
+          <p>Review and approve or reject event applications from organisers who want to use your venue.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">✏️</div>
+          <h3>Edit Venue Details</h3>
+          <p>Keep your venue profile up-to-date: images, description, contact info, and location data.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">🎵</div>
+          <h3>Auto-fill Events</h3>
+          <p>When creating events, venue admins have the venue fields automatically populated from their registered venue.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Discovery -->
+  <section class="section" id="discovery">
+    <div class="section-title">Event Discovery</div>
+    <p class="section-sub">The Discover tab is the heart of Pactd — a powerful, real-time event browser with smart filtering.</p>
+
+    <div class="tabs" id="disc-tabs">
+      <button class="tab active" onclick="switchTab('disc', 'filters', this)">Filters</button>
+      <button class="tab" onclick="switchTab('disc', 'sections', this)">Feed Sections</button>
+    </div>
+
+    <div id="disc-filters" class="tab-panel active">
+      <div class="cards">
+        <div class="card">
+          <div class="card-icon">🔤</div>
+          <h3>Full-Text Search</h3>
+          <p>Search across event names, venues, and towns simultaneously.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">📍</div>
+          <h3>Location Filter</h3>
+          <p>Filter by town. Results are automatically sorted by distance from your GPS location.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">🎭</div>
+          <h3>Category Filter</h3>
+          <p>Music, Exhibition, Convention, Corporate, Comedy, Sports, or Other.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">🎸</div>
+          <h3>Genre Filter</h3>
+          <p>16 music genres — appears only when "Music" category is selected. Alternative, Blues, Classical, Country, Electronic, Folk, Hip-Hop, Indie, Jazz, Metal, Pop, Punk, R&amp;B, Reggae, Rock, Soul.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">💰</div>
+          <h3>Free / Paid</h3>
+          <p>Toggle to show only free events or only paid events.</p>
+        </div>
+      </div>
+    </div>
+
+    <div id="disc-sections" class="tab-panel">
+      <div style="display:flex; flex-direction:column; gap:.75rem;">
+        <div class="accordion">
+          <div class="accordion-header" onclick="toggleAccordion(this)">
+            <span>⭐ Favourites Section</span>
+            <span class="acc-icon">▾</span>
+          </div>
+          <div class="accordion-body">
+            <div class="accordion-body-inner">
+              <p style="color:var(--muted);font-size:.875rem;">Shows all events you've manually favourited, plus every upcoming event from venues you've saved. This section always appears first when you have saved content, ensuring you never miss a gig from your favourite spots.</p>
+            </div>
+          </div>
+        </div>
+        <div class="accordion">
+          <div class="accordion-header" onclick="toggleAccordion(this)">
+            <span>📅 This Week Carousel</span>
+            <span class="acc-icon">▾</span>
+          </div>
+          <div class="accordion-body">
+            <div class="accordion-body-inner">
+              <p style="color:var(--muted);font-size:.875rem;">A horizontal scrolling carousel of events happening within the next 7 days — a quick glance at what's on imminently without having to scroll the full feed.</p>
+            </div>
+          </div>
+        </div>
+        <div class="accordion">
+          <div class="accordion-header" onclick="toggleAccordion(this)">
+            <span>🗺️ By Location</span>
+            <span class="acc-icon">▾</span>
+          </div>
+          <div class="accordion-body">
+            <div class="accordion-body-inner">
+              <p style="color:var(--muted);font-size:.875rem;">The main feed groups events by town and sorts towns by distance from your device's current location. Within each town, events are ordered by date. This makes it easy to find local gigs without knowing exactly which areas to search.</p>
+            </div>
+          </div>
+        </div>
+        <div class="accordion">
+          <div class="accordion-header" onclick="toggleAccordion(this)">
+            <span>🚫 Sold Out</span>
+            <span class="acc-icon">▾</span>
+          </div>
+          <div class="accordion-body">
+            <div class="accordion-body-inner">
+              <p style="color:var(--muted);font-size:.875rem;">Sold-out events are grouped into a separate section at the bottom of the feed. They remain visible for context and social proof — knowing an event sold out can drive interest in future shows from the same organiser.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Events -->
+  <section class="section" id="events">
+    <div class="section-title">Event Management</div>
+    <p class="section-sub">Everything an organiser needs to run a gig — from creation to post-show analytics.</p>
+
+    <div style="display:flex; flex-direction:column; gap:.75rem; margin-bottom:2rem;">
+      <div class="accordion">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          <span>➕ Creating an Event</span>
+          <span class="acc-icon">▾</span>
+        </div>
+        <div class="accordion-body">
+          <div class="accordion-body-inner">
+            <p style="color:var(--muted);font-size:.875rem;margin-bottom:1rem;">Fill in the event form with the following information:</p>
+            <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:.75rem;">
+              <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:.85rem;">
+                <div style="font-weight:600;font-size:.85rem;margin-bottom:.3rem;">Basic Info</div>
+                <ul class="feature-list" style="font-size:.8rem;">
+                  <li>Band / artist name</li>
+                  <li>Venue (auto-filled for venue admins)</li>
+                  <li>Date and time</li>
+                  <li>Description</li>
+                  <li>Event image</li>
+                </ul>
+              </div>
+              <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:.85rem;">
+                <div style="font-weight:600;font-size:.85rem;margin-bottom:.3rem;">Ticketing</div>
+                <ul class="feature-list" style="font-size:.8rem;">
+                  <li>Total ticket quantity</li>
+                  <li>Threshold (minimum to proceed)</li>
+                  <li>Price + currency</li>
+                  <li>Free event toggle</li>
+                </ul>
+              </div>
+              <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:.85rem;">
+                <div style="font-weight:600;font-size:.85rem;margin-bottom:.3rem;">Classification</div>
+                <ul class="feature-list" style="font-size:.8rem;">
+                  <li>Category (Music, Comedy, etc.)</li>
+                  <li>Music genre (if Music category)</li>
+                </ul>
+              </div>
+              <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:.85rem;">
+                <div style="font-weight:600;font-size:.85rem;margin-bottom:.3rem;">Location</div>
+                <ul class="feature-list" style="font-size:.8rem;">
+                  <li>Address and town</li>
+                  <li>GPS coordinates (auto-detected)</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          <span>📱 Ticket Scanning at the Door</span>
+          <span class="acc-icon">▾</span>
+        </div>
+        <div class="accordion-body">
+          <div class="accordion-body-inner">
+            <p style="color:var(--muted);font-size:.875rem;margin-bottom:.75rem;">The scanning screen has two modes:</p>
+            <div style="display:flex;gap:1rem;flex-wrap:wrap;">
+              <div style="flex:1;min-width:200px;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1rem;">
+                <div style="font-weight:600;margin-bottom:.35rem;">📷 Scan Mode</div>
+                <p style="color:var(--muted);font-size:.8rem;">Live camera view that reads a guest's QR code and instantly validates or rejects the ticket with visual feedback.</p>
+              </div>
+              <div style="flex:1;min-width:200px;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1rem;">
+                <div style="font-weight:600;margin-bottom:.35rem;">📋 List Mode</div>
+                <p style="color:var(--muted);font-size:.8rem;">Full attendee list showing each ticket's status (Valid / Used / Refunded), live attendance counts, and percentage of seats filled.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          <span>📊 Sales Analytics</span>
+          <span class="acc-icon">▾</span>
+        </div>
+        <div class="accordion-body">
+          <div class="accordion-body-inner">
+            <p style="color:var(--muted);font-size:.875rem;">Each event detail screen (for the organiser) includes a chart showing ticket sales over time. Track when demand spikes — after a social post, a press mention, or as the event date approaches — to better plan future events.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          <span>♻️ Duplicate Events</span>
+          <span class="acc-icon">▾</span>
+        </div>
+        <div class="accordion-body">
+          <div class="accordion-body-inner">
+            <p style="color:var(--muted);font-size:.875rem;">Regular promoters can duplicate any past event to pre-fill the creation form with all the same details. Just update the date and you're ready to go — great for recurring nights or repeat bookings.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <h3 style="font-size:1rem;font-weight:600;margin-bottom:1rem;color:var(--muted)">Event Status Flow</h3>
+    <div class="flow">
+      <div class="flow-step">
+        <div class="step-num">Step 1</div>
+        <div class="step-label">Created</div>
+        <div class="step-sub">Organiser publishes event</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">
+        <div class="step-num">Step 2</div>
+        <div class="step-label">Pending</div>
+        <div class="step-sub">Awaiting venue approval (if linked)</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">
+        <div class="step-num">Step 3</div>
+        <div class="step-label">Approved</div>
+        <div class="step-sub">Visible in discover feed</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">
+        <div class="step-num">Step 4</div>
+        <div class="step-label">Threshold Met</div>
+        <div class="step-sub">The Pact is made</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">
+        <div class="step-num">Step 5</div>
+        <div class="step-label">Sold Out / Live</div>
+        <div class="step-sub">Event proceeds</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tickets -->
+  <section class="section" id="tickets">
+    <div class="section-title">Tickets</div>
+    <p class="section-sub">From purchase to entry — the full ticket lifecycle on Pactd.</p>
+
+    <div class="cards" style="margin-bottom:2rem;">
+      <div class="card">
+        <div class="card-icon">🛒</div>
+        <h3>Purchasing</h3>
+        <p>Free events: one-tap claim. Paid events: Stripe checkout with a 10% booking fee (minimum 50p). Apple Pay and Google Pay supported.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">📲</div>
+        <h3>QR Code Entry</h3>
+        <p>Each ticket contains a unique QR code. Present it at the door for instant scanning by the organiser's app.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">📅</div>
+        <h3>Add to Calendar</h3>
+        <p>One tap adds the event to your device's native calendar app with all the event details included.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🔀</div>
+        <h3>Transfer Tickets</h3>
+        <p>Generate a shareable transfer link. Recipients click the link to claim the ticket. Transfers are time-limited and can be cancelled before they're accepted.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🕐</div>
+        <h3>Past Tickets</h3>
+        <p>Toggle between upcoming and past tickets. Your gig history stays on your profile forever.</p>
+      </div>
+    </div>
+
+    <h3 style="font-size:1rem;font-weight:600;margin-bottom:1rem;color:var(--muted)">Ticket Transfer Flow</h3>
+    <div class="flow">
+      <div class="flow-step">
+        <div class="step-num">Step 1</div>
+        <div class="step-label">Initiate</div>
+        <div class="step-sub">Tap "Transfer" on your ticket</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">
+        <div class="step-num">Step 2</div>
+        <div class="step-label">Share Link</div>
+        <div class="step-sub">Via share sheet or clipboard</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">
+        <div class="step-num">Step 3</div>
+        <div class="step-label">Recipient Claims</div>
+        <div class="step-sub">Opens link, confirms claim</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">
+        <div class="step-num">Step 4</div>
+        <div class="step-label">Transferred</div>
+        <div class="step-sub">Ticket moves to new owner</div>
+      </div>
+    </div>
+
+    <div style="margin-top:1.5rem;">
+      <h3 style="font-size:1rem;font-weight:600;margin-bottom:.75rem;color:var(--muted)">Ticket Statuses</h3>
+      <table class="role-table">
+        <thead>
+          <tr>
+            <th>Status</th>
+            <th>Meaning</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="badge badge-green">Valid</span></td>
+            <td style="color:var(--muted);font-size:.875rem;">Ticket is purchased and ready for entry.</td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-amber">Used</span></td>
+            <td style="color:var(--muted);font-size:.875rem;">QR code has been scanned successfully at the venue.</td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-red">Refunded</span></td>
+            <td style="color:var(--muted);font-size:.875rem;">Ticket was refunded. No longer valid for entry.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Venues -->
+  <section class="section" id="venues">
+    <div class="section-title">Venues</div>
+    <p class="section-sub">A browsable directory of registered spaces, with community reviews and an admin workflow for venue owners.</p>
+
+    <div class="tabs" id="venue-tabs">
+      <button class="tab active" onclick="switchTab('venue', 'browse', this)">Browsing</button>
+      <button class="tab" onclick="switchTab('venue', 'admin', this)">Venue Admin</button>
+      <button class="tab" onclick="switchTab('venue', 'reviews', this)">Reviews</button>
+    </div>
+
+    <div id="venue-browse" class="tab-panel active">
+      <div class="cards">
+        <div class="card">
+          <div class="card-icon">🔍</div>
+          <h3>Search Venues</h3>
+          <p>Search by venue name or town. Results update in real-time as you type.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">⭐</div>
+          <h3>Star Ratings</h3>
+          <p>Each venue shows an average star rating (1–5) calculated from all community reviews.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">❤️</div>
+          <h3>Favourite Venues</h3>
+          <p>Save venues you love. All their upcoming events will appear in your discovery feed automatically.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">📅</div>
+          <h3>Venue Events</h3>
+          <p>Tap any venue to see its approved upcoming events listed directly on the venue profile.</p>
+        </div>
+      </div>
+    </div>
+
+    <div id="venue-admin" class="tab-panel">
+      <p style="color:var(--muted);font-size:.875rem;margin-bottom:1.5rem;">Venue owners can register their space on Pactd and manage incoming event requests.</p>
+      <div class="flow" style="flex-direction:column;align-items:flex-start;gap:.5rem;">
+        <div style="display:flex;align-items:center;gap:.75rem;">
+          <div class="flow-step" style="min-width:140px;">
+            <div class="step-num">Step 1</div>
+            <div class="step-label">Register Venue</div>
+          </div>
+          <span style="color:var(--muted);font-size:.82rem;">Submit name, address, description, image, GPS location</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:.75rem;">
+          <div class="flow-step" style="min-width:140px;">
+            <div class="step-num">Step 2</div>
+            <div class="step-label">Await Approval</div>
+          </div>
+          <span style="color:var(--muted);font-size:.82rem;">Pactd reviews the venue registration</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:.75rem;">
+          <div class="flow-step" style="min-width:140px;">
+            <div class="step-num">Step 3</div>
+            <div class="step-label">Go Live</div>
+          </div>
+          <span style="color:var(--muted);font-size:.82rem;">Venue appears in the directory; organisers can request it</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:.75rem;">
+          <div class="flow-step" style="min-width:140px;">
+            <div class="step-num">Step 4</div>
+            <div class="step-label">Approve Events</div>
+          </div>
+          <span style="color:var(--muted);font-size:.82rem;">Review and approve or reject event applications from organisers</span>
+        </div>
+      </div>
+    </div>
+
+    <div id="venue-reviews" class="tab-panel">
+      <div class="cards">
+        <div class="card">
+          <div class="card-icon">✏️</div>
+          <h3>Write a Review</h3>
+          <p>Authenticated users can leave a star rating and written review for any venue they've visited.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">📝</div>
+          <h3>Edit Your Review</h3>
+          <p>Changed your mind? Update your rating and comments at any time from the venue page.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">📊</div>
+          <h3>Aggregate Rating</h3>
+          <p>The venue's overall star rating is calculated from all reviews and displayed prominently in the directory listing.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Payments -->
+  <section class="section" id="payments">
+    <div class="section-title">Payments & Payouts</div>
+    <p class="section-sub">Transparent, Stripe-powered payments for organisers and attendees.</p>
+
+    <div class="tabs" id="pay-tabs">
+      <button class="tab active" onclick="switchTab('pay', 'buying', this)">Buying Tickets</button>
+      <button class="tab" onclick="switchTab('pay', 'payouts', this)">Organiser Payouts</button>
+    </div>
+
+    <div id="pay-buying" class="tab-panel active">
+      <div class="cards">
+        <div class="card">
+          <div class="card-icon">💳</div>
+          <h3>Stripe Checkout</h3>
+          <p>Paid ticket purchases go through Stripe's secure checkout. Card details are never stored by Pactd.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">📱</div>
+          <h3>Apple Pay &amp; Google Pay</h3>
+          <p>Native wallet payments are supported for a frictionless checkout experience on compatible devices.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">💰</div>
+          <h3>Transparent Fees</h3>
+          <p>A 10% booking fee (minimum 50p) is applied to paid events. Free events have zero platform fee.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">🌍</div>
+          <h3>Multi-Currency</h3>
+          <p>Events can be priced in EUR, GBP, USD, CAD, AUD, or CHF.</p>
+        </div>
+      </div>
+    </div>
+
+    <div id="pay-payouts" class="tab-panel">
+      <p style="color:var(--muted);font-size:.875rem;margin-bottom:1.5rem;">Organisers connect a Stripe account to receive ticket revenue directly.</p>
+      <div class="cards">
+        <div class="card">
+          <div class="card-icon">🔗</div>
+          <h3>Stripe Connect Onboarding</h3>
+          <p>Walk through Stripe's guided onboarding to link your bank account and enable payouts directly from the Pactd profile tab.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">💵</div>
+          <h3>Balance Dashboard</h3>
+          <p>See your available balance (ready to withdraw) and pending balance (funds not yet settled) at a glance.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">📈</div>
+          <h3>Per-Event Earnings</h3>
+          <p>Drill down into each event's financial breakdown: gross revenue, platform fee, and net earnings.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">✅</div>
+          <h3>Account Status</h3>
+          <p>Clear indicators show whether your Stripe account has charges and payouts enabled, so you know when you're ready to start selling.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Onboarding -->
+  <section class="section" id="onboarding">
+    <div class="section-title">Getting Started</div>
+    <p class="section-sub">New users are guided through an onboarding experience before reaching the main app.</p>
+
+    <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:2rem;">
+      <div style="flex:1;min-width:180px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;text-align:center;">
+        <div style="font-size:1.5rem;margin-bottom:.5rem;">🎵</div>
+        <div style="font-weight:700;font-size:.9rem;margin-bottom:.3rem;">Slide 1</div>
+        <div style="color:var(--muted);font-size:.8rem;">Discover live music near you</div>
+      </div>
+      <div style="flex:1;min-width:180px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;text-align:center;">
+        <div style="font-size:1.5rem;margin-bottom:.5rem;">🤝</div>
+        <div style="font-weight:700;font-size:.9rem;margin-bottom:.3rem;">Slide 2</div>
+        <div style="color:var(--muted);font-size:.8rem;">The Pact — commitment-based events</div>
+      </div>
+      <div style="flex:1;min-width:180px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;text-align:center;">
+        <div style="font-size:1.5rem;margin-bottom:.5rem;">🌱</div>
+        <div style="font-weight:700;font-size:.9rem;margin-bottom:.3rem;">Slide 3</div>
+        <div style="color:var(--muted);font-size:.8rem;">Support grassroots music and creators</div>
+      </div>
+      <div style="flex:1;min-width:180px;background:rgba(124,58,237,.1);border:1px solid rgba(124,58,237,.3);border-radius:var(--radius);padding:1.25rem;text-align:center;">
+        <div style="font-size:1.5rem;margin-bottom:.5rem;">🚀</div>
+        <div style="font-weight:700;font-size:.9rem;margin-bottom:.3rem;">Slide 4</div>
+        <div style="color:var(--muted);font-size:.8rem;">Sign up or log in to get started</div>
+      </div>
+    </div>
+
+    <p style="color:var(--muted);font-size:.875rem;">The onboarding carousel plays once and is then skipped on future app launches. Users can tap <strong style="color:var(--text)">Skip</strong> at any time to jump straight to the login screen.</p>
+  </section>
+
+  <!-- Auth -->
+  <section class="section" id="auth">
+    <div class="section-title">Authentication</div>
+    <p class="section-sub">Secure, email-based authentication powered by Supabase.</p>
+
+    <div class="tabs" id="auth-tabs">
+      <button class="tab active" onclick="switchTab('auth', 'register', this)">Register</button>
+      <button class="tab" onclick="switchTab('auth', 'login', this)">Login</button>
+      <button class="tab" onclick="switchTab('auth', 'forgot', this)">Forgot Password</button>
+    </div>
+
+    <div id="auth-register" class="tab-panel active">
+      <div class="flow" style="margin-bottom:1.5rem;">
+        <div class="flow-step">
+          <div class="step-num">Step 1</div>
+          <div class="step-label">Enter Details</div>
+          <div class="step-sub">Name, email, password</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="step-num">Step 2</div>
+          <div class="step-label">Submit</div>
+          <div class="step-sub">Supabase creates account</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="step-num">Step 3</div>
+          <div class="step-label">Verify Email</div>
+          <div class="step-sub">Click link in inbox</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="step-num">Step 4</div>
+          <div class="step-label">Login</div>
+          <div class="step-sub">Access the full app</div>
+        </div>
+      </div>
+      <ul class="feature-list">
+        <li>Friendly error messages for weak passwords, duplicate emails, and invalid formats</li>
+        <li>Display name is stored on the profile and shown throughout the app</li>
+        <li>Profile is automatically created in the database on first sign-up</li>
+      </ul>
+    </div>
+
+    <div id="auth-login" class="tab-panel">
+      <ul class="feature-list">
+        <li>Email and password sign-in</li>
+        <li>Session is persisted securely — stay logged in between app launches</li>
+        <li>Rate limiting prevents brute-force attacks</li>
+        <li>Push notification token is registered on successful login</li>
+      </ul>
+    </div>
+
+    <div id="auth-forgot" class="tab-panel">
+      <ul class="feature-list">
+        <li>Enter your registered email address</li>
+        <li>Receive a password reset link via email</li>
+        <li>Click the link to set a new password</li>
+        <li>Available from the login screen without requiring an existing session</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Tech Stack -->
+  <section class="section" id="stack">
+    <div class="section-title">Tech Stack</div>
+    <p class="section-sub">Built with modern, production-grade tools across the full stack.</p>
+
+    <div class="tech-grid">
+      <div class="tech-item"><div class="tech-cat">Framework</div><div class="tech-name">React Native 0.81 + Expo 54</div></div>
+      <div class="tech-item"><div class="tech-cat">Navigation</div><div class="tech-name">Expo Router v6</div></div>
+      <div class="tech-item"><div class="tech-cat">UI Library</div><div class="tech-name">React Native Paper (Material 3)</div></div>
+      <div class="tech-item"><div class="tech-cat">Backend</div><div class="tech-name">Supabase (PostgreSQL)</div></div>
+      <div class="tech-item"><div class="tech-cat">Auth</div><div class="tech-name">Supabase Auth + Secure Store</div></div>
+      <div class="tech-item"><div class="tech-cat">Payments</div><div class="tech-name">Stripe React Native SDK</div></div>
+      <div class="tech-item"><div class="tech-cat">Location</div><div class="tech-name">Expo Location</div></div>
+      <div class="tech-item"><div class="tech-cat">Camera / QR</div><div class="tech-name">Expo Camera</div></div>
+      <div class="tech-item"><div class="tech-cat">Images</div><div class="tech-name">Expo Image Picker</div></div>
+      <div class="tech-item"><div class="tech-cat">Calendar</div><div class="tech-name">Expo Calendar</div></div>
+      <div class="tech-item"><div class="tech-cat">QR Generation</div><div class="tech-name">react-native-qrcode-svg</div></div>
+      <div class="tech-item"><div class="tech-cat">Notifications</div><div class="tech-name">Expo Notifications</div></div>
+      <div class="tech-item"><div class="tech-cat">Error Tracking</div><div class="tech-name">Sentry</div></div>
+      <div class="tech-item"><div class="tech-cat">Testing</div><div class="tech-name">Jest + React Native Testing Library</div></div>
+      <div class="tech-item"><div class="tech-cat">Fonts</div><div class="tech-name">Raleway + Oswald (Google Fonts)</div></div>
+      <div class="tech-item"><div class="tech-cat">Platform</div><div class="tech-name">iOS, Android &amp; Web</div></div>
+    </div>
+  </section>
+
+  <!-- Navigation -->
+  <section class="section" id="navigation">
+    <div class="section-title">Navigation Structure</div>
+    <p class="section-sub">File-based routing via Expo Router. The app uses a tab navigator as its main shell.</p>
+
+    <div class="code-block"><span class="cm">// Simplified route tree</span>
+Root (Stack)
+├── <span class="str">Onboarding</span>          <span class="cm">→ one-time intro flow</span>
+│
+├── <span class="str">Auth Group</span>
+│   ├── /login            <span class="cm">→ email + password</span>
+│   ├── /register         <span class="cm">→ sign up</span>
+│   └── /forgot-password  <span class="cm">→ password reset</span>
+│
+└── <span class="str">Main Tabs</span> (authenticated)
+    ├── <span class="kw">Discover</span> (/home)
+    │   └── Browse &amp; filter all events
+    │
+    ├── <span class="kw">My Tickets</span> (/my-tickets)
+    │   └── Purchased tickets (upcoming + past)
+    │
+    ├── <span class="kw">My Events</span> (/my-events)
+    │   ├── /event/create
+    │   ├── /event/edit/[id]
+    │   └── /event/scan/[id]
+    │
+    └── <span class="kw">Venues</span> (/venues)
+        ├── /venue/[id]       <span class="cm">→ venue details</span>
+        └── /venue/create     <span class="cm">→ register a venue</span>
+
+<span class="cm">Standalone screens (pushed from any tab):</span>
+  /event/[id]                 <span class="cm">→ event details / purchase</span>
+  /profile/[id]               <span class="cm">→ public organiser profile</span>
+  /venue/admin/[id]           <span class="cm">→ venue admin panel</span>
+  /payouts                    <span class="cm">→ Stripe balance &amp; earnings</span>
+  /transfer/[token]           <span class="cm">→ ticket transfer claim</span>
+  /stripe-connect/return      <span class="cm">→ Stripe Connect callback</span></div>
+  </section>
+
+  <footer>
+    <div>© 2026 Pactd. All rights reserved.</div>
+    <div>Built with React Native &amp; Expo · Powered by Supabase &amp; Stripe · <a href="/">pactd.app</a></div>
+  </footer>
+
+</main>
+
+<script>
+  // ── Tab switching ──
+  function switchTab(group, id, btn) {
+    document.querySelectorAll(`[id^="${group}-"].tab-panel`).forEach(p => p.classList.remove('active'));
+    const target = document.getElementById(`${group}-${id}`);
+    if (target) target.classList.add('active');
+
+    btn.closest('.tabs').querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+  }
+
+  // ── Accordion ──
+  function toggleAccordion(header) {
+    const body = header.nextElementSibling;
+    const isOpen = header.classList.contains('open');
+
+    header.classList.toggle('open', !isOpen);
+    body.classList.toggle('open', !isOpen);
+  }
+
+  // ── Mobile sidebar ──
+  function toggleSidebar() {
+    document.getElementById('sidebar').classList.toggle('open');
+    document.getElementById('overlay').classList.toggle('open');
+  }
+  function closeMobile() {
+    document.getElementById('sidebar').classList.remove('open');
+    document.getElementById('overlay').classList.remove('open');
+  }
+
+  // ── Active nav on scroll ──
+  const sections = document.querySelectorAll('[id]');
+  const navLinks = document.querySelectorAll('.nav-link');
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        navLinks.forEach(l => l.classList.remove('active'));
+        const active = document.querySelector(`.nav-link[href="#${entry.target.id}"]`);
+        if (active) active.classList.add('active');
+      }
+    });
+  }, { threshold: 0.3, rootMargin: '-80px 0px -60% 0px' });
+
+  sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>

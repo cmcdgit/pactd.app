@@ -22,7 +22,32 @@
       <li><a href="#get-the-app">Get the App</a></li>
       <li><a href="/docs">Docs</a></li>
     </ul>
+    <button class="nav-hamburger" aria-label="Open menu" onclick="toggleMobileNav()">
+      <span></span><span></span><span></span>
+    </button>
   </nav>
+
+  <!-- MOBILE NAV -->
+  <div class="mobile-nav" id="mobile-nav">
+    <a href="#mission" onclick="closeMobileNav()">Mission</a>
+    <a href="#features" onclick="closeMobileNav()">Features</a>
+    <a href="#get-the-app" onclick="closeMobileNav()">Get the App</a>
+    <a href="/docs" onclick="closeMobileNav()">Docs</a>
+  </div>
+  <div class="mobile-nav-overlay" id="mobile-nav-overlay" onclick="closeMobileNav()"></div>
+
+  <script>
+    function toggleMobileNav() {
+      document.getElementById('mobile-nav').classList.toggle('open');
+      document.getElementById('mobile-nav-overlay').classList.toggle('open');
+      document.querySelector('.nav-hamburger').classList.toggle('open');
+    }
+    function closeMobileNav() {
+      document.getElementById('mobile-nav').classList.remove('open');
+      document.getElementById('mobile-nav-overlay').classList.remove('open');
+      document.querySelector('.nav-hamburger').classList.remove('open');
+    }
+  </script>
 
   <!-- HERO -->
   <section class="hero">

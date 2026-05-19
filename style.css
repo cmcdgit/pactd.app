@@ -98,7 +98,7 @@ body {
 
 .btn-primary {
   background: linear-gradient(135deg, var(--primary), var(--secondary));
-  color: #000;
+  color: #fff;
 }
 
 .btn-primary:hover {
@@ -391,9 +391,15 @@ body {
 }
 
 .value-icon {
-  font-size: 1.8rem;
+  width: 44px; height: 44px;
   flex-shrink: 0;
-  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.value-icon svg {
+  width: 28px; height: 28px;
 }
 
 .value-card h3 {
@@ -412,6 +418,7 @@ body {
 /* ─── Features ──────────────────────────────────────────────────── */
 .features {
   padding: 100px 0;
+  background: linear-gradient(180deg, var(--bg) 0%, var(--surface) 50%, var(--bg) 100%);
 }
 
 .features-grid {
@@ -543,8 +550,12 @@ body {
 
 .app-store-sub {
   color: var(--text-muted);
-  margin-bottom: 48px;
+  margin-bottom: 24px;
   font-size: 1rem;
+}
+
+.newsletter-form-container {
+  margin-bottom: 48px;
 }
 
 .qr-grid {

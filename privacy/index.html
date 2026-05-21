@@ -170,12 +170,36 @@
   <!-- NAV -->
   <nav class="nav">
     <a href="/" class="nav-logo">Pactd</a>
-    <ul class="nav-links">
+    <ul class="nav-links" id="nav-links">
       <li><a href="/#mission">Mission</a></li>
       <li><a href="/#features">Features</a></li>
       <li><a href="/#get-the-app">Get the App</a></li>
     </ul>
+    <button class="nav-hamburger" aria-label="Open menu" onclick="toggleMobileNav()">
+      <span></span><span></span><span></span>
+    </button>
   </nav>
+
+  <!-- MOBILE NAV -->
+  <div class="mobile-nav" id="mobile-nav">
+    <a href="/#mission" onclick="closeMobileNav()">Mission</a>
+    <a href="/#features" onclick="closeMobileNav()">Features</a>
+    <a href="/#get-the-app" onclick="closeMobileNav()">Get the App</a>
+  </div>
+  <div class="mobile-nav-overlay" id="mobile-nav-overlay" onclick="closeMobileNav()"></div>
+
+  <script>
+    function toggleMobileNav() {
+      document.getElementById('mobile-nav').classList.toggle('open');
+      document.getElementById('mobile-nav-overlay').classList.toggle('open');
+      document.querySelector('.nav-hamburger').classList.toggle('open');
+    }
+    function closeMobileNav() {
+      document.getElementById('mobile-nav').classList.remove('open');
+      document.getElementById('mobile-nav-overlay').classList.remove('open');
+      document.querySelector('.nav-hamburger').classList.remove('open');
+    }
+  </script>
 
   <!-- HERO -->
   <section class="privacy-hero">
@@ -478,7 +502,7 @@
           how we handle your data, please reach out:
         </p>
         <ul>
-          <li>Email: <a href="mailto:ciaranmcdevitt@outlook.com">ciaranmcdevitt@outlook.com</a></li>
+          <li>Email: <a href="mailto:privacy@pactd.app">privacy@pactd.app</a></li>
         </ul>
         <p>
           We aim to respond to all privacy-related enquiries within 5 working days.

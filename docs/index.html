@@ -544,7 +544,7 @@
         <div class="stat-label">Event categories</div>
       </div>
       <div class="stat-card">
-        <div class="stat-val">5</div>
+        <div class="stat-val">6</div>
         <div class="stat-label">Currencies (EUR, GBP, USD…)</div>
       </div>
     </div>
@@ -1355,7 +1355,7 @@ Root (Stack)
   }
 
   // ── Active nav on scroll ──
-  const sections = document.querySelectorAll('[id]');
+  const sections = document.querySelectorAll('section[id], .section[id]');
   const navLinks = document.querySelectorAll('.nav-link');
 
   const observer = new IntersectionObserver(entries => {
